@@ -26,7 +26,19 @@ export class UserRepository {
     }
   }
 
-  findByEmail(email: string) {
+  async findByEmail(email: string) {
     return this.usersOrmRepository.findOneBy({ email });
+  }
+
+  async findById(id: number) {
+    return this.usersOrmRepository.findOneBy({ id });
+  }
+
+  async findAll() {
+    return this.usersOrmRepository.find();
+  }
+
+  async deleteUser(id: number) {
+    await this.usersOrmRepository.delete(id);
   }
 }
