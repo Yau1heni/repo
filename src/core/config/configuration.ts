@@ -12,6 +12,10 @@ const getSettings = () => ({
     USERNAME: process.env.DB_USER,
     PASSWORD: process.env.DB_PASSWORD,
   },
+  auth: {
+    JWT_SECRET: process.env.JWT_SECRET,
+    EXPIRES_IN: process.env.EXPIRES_IN,
+  },
 });
 
 export default getSettings;
