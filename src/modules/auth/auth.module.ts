@@ -4,7 +4,6 @@ import { AuthService } from './auth.service';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { LocalStrategy } from 'src/modules/auth/local.strategy';
-import { JwtStrategy } from 'src/core/guard/jwt.strategy';
 import { UserModule } from 'src/modules/user/user.module';
 import { Configuration } from 'src/core/config/configuration';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -27,6 +26,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
+  providers: [AuthService, LocalStrategy],
 })
 export class AuthModule {}

@@ -9,13 +9,13 @@ import { ErrorUtils } from 'src/core/utils/error.utils';
 export class UserRepository {
   constructor(
     @InjectRepository(User)
-    private usersOrmRepository: Repository<User>,
+    private userOrmRepository: Repository<User>,
     private readonly errorUtils: ErrorUtils,
   ) {}
 
   async save(user: User): Promise<User> {
     try {
-      return await this.usersOrmRepository.save(user);
+      return await this.userOrmRepository.save(user);
     } catch (error) {
       const errorMessage = this.errorUtils.getErrorMessage(
         error,
@@ -26,19 +26,22 @@ export class UserRepository {
     }
   }
 
-  async findByEmail(email: string) {
-    return this.usersOrmRepository.findOneBy({ email });
+  async findByEmailForPasswordCheck(email: string) {
+    return await this.userOrmRepository.findOne({
+      where: { email },
+      select: ['id', 'role', 'passwordHash'],
+    });
   }
 
   async findById(id: number) {
-    return this.usersOrmRepository.findOneBy({ id });
+    return this.userOrmRepository.findOneBy({ id });
   }
 
   async findAll() {
-    return this.usersOrmRepository.find();
+    return this.userOrmRepository.find();
   }
 
   async deleteUser(id: number) {
-    await this.usersOrmRepository.delete(id);
+    await this.userOrmRepository.delete(id);
   }
 }

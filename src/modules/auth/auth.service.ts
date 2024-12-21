@@ -4,6 +4,7 @@ import { User } from 'src/modules/user/user.entity';
 import { UserRepository } from 'src/modules/user/user.repository';
 import { RegisterUserDto } from 'src/modules/auth/dto/register-user.dto';
 import { JwtService } from '@nestjs/jwt';
+import { JwtPayload } from 'src/modules/auth/types';
 
 @Injectable()
 export class AuthService {
@@ -12,11 +13,8 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async validateUser(
-    email: string,
-    password: string,
-  ): Promise<{ userId: number }> {
-    const user = await this.userRepository.findByEmail(email);
+  async validateUser(email: string, password: string): Promise<JwtPayload> {
+    const user = await this.userRepository.findByEmailForPasswordCheck(email);
     if (!user) {
       throw new NotFoundException();
     }
@@ -25,7 +23,7 @@ export class AuthService {
       throw new NotFoundException();
     }
 
-    return { userId: user.id };
+    return { userId: String(user.id), role: user.role };
   }
 
   async registerUser(dto: RegisterUserDto): Promise<number> {
@@ -39,8 +37,8 @@ export class AuthService {
     return createdUser.id;
   }
 
-  async login(userId: Express.User) {
-    const token = this.jwtService.sign({ userId });
+  async login(payload: JwtPayload) {
+    const token = this.jwtService.sign(payload);
 
     return { accessToken: token };
   }
